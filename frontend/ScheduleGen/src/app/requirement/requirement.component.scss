@@ -3,33 +3,38 @@
 .questions-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2.5rem 1.2rem;
   font-family: "Inter", "Tajawal", sans-serif;
   color: #1f2937;
 }
 
 h2 {
   text-align: center;
-  font-size: 1.4rem;
-  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  margin-bottom: 2.2rem;
   color: #111827;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* -------- Step Card -------- */
 
 .step {
   background: #ffffff;
-  padding: 2rem;
-  border-radius: 14px;
+  padding: 2.2rem;
+  border-radius: 16px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.04);
-  margin-bottom: 2rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  margin-bottom: 2.5rem;
+  transition: box-shadow 0.25s ease;
+}
+
+.step:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .step h3 {
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+  margin-bottom: 1.6rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #111827;
 }
@@ -38,23 +43,27 @@ h2 {
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-bottom: 1.8rem;
 }
 
 th {
-  padding: 0.75rem;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0.9rem;
+  background: #f3f4f6;
   font-size: 0.95rem;
   color: #374151;
+  font-weight: 600;
+  border-radius: 8px;
 }
 
 td {
-  padding: 0.8rem;
+  padding: 0.9rem;
   text-align: center;
   color: #374151;
-  border-bottom: 1px solid #f1f1f1;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
 }
 
 /* clean radio */
@@ -62,28 +71,38 @@ input[type="radio"] {
   width: 18px;
   height: 18px;
   accent-color: #4f46e5;
+  cursor: pointer;
 }
 
 /* -------- Form Cards (Steps 2 + 3) -------- */
 
 .subject-card,
 .activity-card {
-  background: #f9fafb;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
-  padding: 1.3rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
+  padding: 1.5rem;
+  border-radius: 14px;
+  margin-bottom: 1.3rem;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.2rem;
+  gap: 1.4rem;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subject-card:hover,
+.activity-card:hover {
+  border-color: #c7d2fe;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
 }
 
 label {
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #374151;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   display: block;
 }
 
@@ -91,9 +110,9 @@ label {
 input,
 select {
   width: 100%;
-  padding: 0.65rem 0.75rem;
+  padding: 0.7rem 0.8rem;
   font-size: 0.95rem;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #d1d5db;
   background: #ffffff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -102,7 +121,7 @@ select {
 input:focus,
 select:focus {
   border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
   outline: none;
 }
 
@@ -111,36 +130,40 @@ select:focus {
   .subject-card,
   .activity-card {
     grid-template-columns: 1fr;
+    padding: 1.2rem;
   }
 }
 
 /* -------- Buttons -------- */
 
 button {
-  padding: 0.7rem 1.3rem;
-  border-radius: 8px;
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
   border: none;
   font-size: 0.95rem;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 /* primary */
 button:not([type="button"]) {
   background: #4f46e5;
   color: #ffffff;
+  margin-top: 10px;
+  box-shadow: 0 3px 8px rgba(79, 70, 229, 0.3);
 }
 
 button:not([type="button"]):hover {
   background: #4338ca;
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35);
 }
 
 /* secondary (add subject/activity) */
 button[type="button"] {
   background: #f3f4f6;
   color: #111827;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #d1d5db;
 }
 
 button[type="button"]:hover {
@@ -148,5 +171,5 @@ button[type="button"]:hover {
 }
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }

@@ -1,18 +1,141 @@
 .schedule-container {
-  max-width: 900px;
-  margin: auto;
-  padding: 2rem;
-  font-family: "Tajawal", sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: "Inter", "Tajawal", sans-serif;
+  color: #1f2937;
 
   h2 {
     text-align: center;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #111827;
   }
 
-  pre {
-    background: #f0f0f0;
-    padding: 1rem;
-    border-radius: 8px;
+  .subtitle {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+
+  /* Loading Spinner */
+  .loading-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e5e7eb;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #374151;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Schedule Grid */
+  .schedule-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: nowrap;
     overflow-x: auto;
+    padding-bottom: 1rem;
+
+    .day-card {
+      flex: 1 0 150px; // flexible width with minimum
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f3f4f6;
+      transition: 0.25s;
+      min-width: 140px;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #4f46e5;
+        margin-bottom: 0.8rem;
+        text-align: center;
+      }
+
+      .time-block {
+        display: flex;
+        justify-content: space-between;
+        background: #f9fafb;
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        border: 1px solid #e5e7eb;
+        font-size: 0.875rem;
+
+        .time {
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .subject {
+          font-weight: 500;
+          color: #6d28d9;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  /* Scrollbar style for overflow-x */
+  .schedule-grid::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .schedule-grid::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 3px;
+  }
+
+  .schedule-grid::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 1200px) {
+    .schedule-grid {
+      flex-wrap: nowrap;
+      gap: 0.8rem;
+    }
+
+    .day-card {
+      min-width: 130px;
+      padding: 0.8rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .schedule-grid {
+      overflow-x: scroll;
+    }
   }
 }

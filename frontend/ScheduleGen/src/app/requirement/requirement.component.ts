@@ -3,6 +3,66 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, For
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+interface Activity {
+  name: string;
+  priority: number;
+  startTime: string;
+  endTime: string;
+}
+
+interface Subject {
+  name: string;
+  coefficient: number;
+}
+
+interface InputData {
+  activities: Activity[];
+  dailyWork: {
+    start: string;
+    end: string;
+  };
+  schedule: { [day: string]: { status: string } };
+  subjects: Subject[];
+}
+
+function parseScheduleToText(data: InputData): string {
+  let text = '';
+
+  // Daily Work
+  if (data.dailyWork) {
+    text += `Daily Work Hours: ${data.dailyWork.start} - ${data.dailyWork.end}\n\n`;
+  }
+
+  // Schedule
+  if (data.schedule) {
+    text += 'Weekly Schedule Status:\n';
+    for (const day of ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']) {
+      const status = data.schedule[day]?.status || 'N/A';
+      text += `  ${day}: ${status}\n`;
+    }
+    text += '\n';
+  }
+
+  // Subjects
+  if (data.subjects && data.subjects.length > 0) {
+    text += 'Subjects & Coefficients:\n';
+    data.subjects.forEach(subj => {
+      text += `  - ${subj.name} (Coefficient: ${subj.coefficient})\n`;
+    });
+    text += '\n';
+  }
+
+  // Activities
+  if (data.activities && data.activities.length > 0) {
+    text += 'Activities:\n';
+    data.activities.forEach(act => {
+      text += `  - ${act.name} (Priority: ${act.priority}) from ${act.startTime} to ${act.endTime}\n`;
+    });
+  }
+
+  return text;
+}
+
 @Component({
   selector: 'app-requirement',
   templateUrl: './requirement.component.html',
@@ -16,25 +76,28 @@ export class RequirementComponent {
   weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   states = ['full', 'partial', 'free'];
 
-  // schedule will store schedule['Mon'].status = 'full' | 'partial' | 'free'
   schedule: any = {};
+
+  dailyWorkSchedule = {
+    start: '',
+    end: ''
+  };
 
   subjectsForm: FormGroup;
   activitiesForm: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {
-
-    // Initialize schedule correctly for ngModel binding
+    // Initialize schedule
     this.weekDays.forEach(day => {
-      this.schedule[day] = {
-        status: '' // default empty, will be bound via [(ngModel)]
-      };
+      this.schedule[day] = { status: '' };
     });
 
+    // Subjects form
     this.subjectsForm = this.fb.group({
       subjects: this.fb.array([this.createSubject()])
     });
 
+    // Activities form
     this.activitiesForm = this.fb.group({
       activities: this.fb.array([this.createActivity()])
     });
@@ -44,8 +107,7 @@ export class RequirementComponent {
     this.currentStep++;
   }
 
-  /* --------------------- SUBJECTS --------------------- */
-
+  /* ------------------- SUBJECTS ------------------- */
   get subjects() {
     return this.subjectsForm.get('subjects') as FormArray;
   }
@@ -53,7 +115,7 @@ export class RequirementComponent {
   createSubject(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      coefficient: [1, Validators.required],
+      coefficient: [1, Validators.required]
     });
   }
 
@@ -61,8 +123,7 @@ export class RequirementComponent {
     this.subjects.push(this.createSubject());
   }
 
-  /* --------------------- ACTIVITIES --------------------- */
-
+  /* ------------------- ACTIVITIES ------------------- */
   get activities() {
     return this.activitiesForm.get('activities') as FormArray;
   }
@@ -80,15 +141,17 @@ export class RequirementComponent {
     this.activities.push(this.createActivity());
   }
 
-  /* --------------------- GENERATE RESULT --------------------- */
-
+  /* ------------------- FINAL RESULT ------------------- */
   generateSchedule() {
-    const userData = {
+    const userData: InputData = {
+      dailyWork: this.dailyWorkSchedule,
       schedule: this.schedule,
       subjects: this.subjectsForm.value.subjects,
       activities: this.activitiesForm.value.activities
     };
 
+    const text = parseScheduleToText(userData);
+    console.log(text);
     console.log(userData);
 
     this.router.navigate(['/schedule'], { state: { data: userData } });

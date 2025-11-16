@@ -1,78 +1,100 @@
 <div class="questions-container">
-  <h2>Step {{currentStep + 1}} of 3</h2>
+  <h2>Step {{ currentStep + 1 }} of 4</h2>
 
-<!-- Step 1: Weekly Schedule -->
-<div *ngIf="currentStep === 0" class="step">
-  <h3>How many classes do you have each day?</h3>
-  <table>
-    <tr>
-      <th>State</th>
-      <th *ngFor="let day of weekDays">{{ day }}</th>
-    </tr>
-    <tr *ngFor="let state of ['full', 'partial', 'free']">
-      <td>{{ state | titlecase }}</td>
-      <td *ngFor="let day of weekDays">
-        <input 
-          type="radio" 
-          name="{{day}}" 
-          [value]="state" 
-          [(ngModel)]="schedule[day].status"
+  <!-- Step 0: Daily Work Schedule -->
+  <div *ngIf="currentStep === 0" class="step">
+    <h3>What is your daily work schedule?</h3>
+
+    <div class="form-group">
+      <label for="startTime">Start Time</label>
+      <input type="time" id="startTime" [(ngModel)]="dailyWorkSchedule.start">
+
+      <label for="endTime">End Time</label>
+      <input type="time" id="endTime" [(ngModel)]="dailyWorkSchedule.end">
+    </div>
+
+    <button (click)="nextStep()">Next</button>
+  </div>
+
+  <!-- Step 1: Weekly Schedule -->
+  <div *ngIf="currentStep === 1" class="step">
+    <h3>How many classes do you have each day?</h3>
+
+    <table>
+      <tr>
+        <th>State</th>
+        <th *ngFor="let day of weekDays">{{ day }}</th>
+      </tr>
+
+      <tr *ngFor="let state of states">
+        <td>{{ state | titlecase }}</td>
+
+        <td *ngFor="let day of weekDays">
+          <input 
+            type="radio"
+            [name]="day"
+            [value]="state"
+            [(ngModel)]="schedule[day].status"
+          >
+        </td>
+      </tr>
+    </table>
+
+    <button (click)="nextStep()">Next</button>
+  </div>
+
+  <!-- Step 2: Subjects -->
+  <div *ngIf="currentStep === 2" class="step">
+    <h3>Enter your subjects</h3>
+
+    <form [formGroup]="subjectsForm">
+      <div formArrayName="subjects">
+        <div 
+          *ngFor="let sub of subjects.controls; let i = index"
+          [formGroupName]="i"
+          class="subject-card"
         >
-      </td>
-    </tr>
-  </table>
-  <button (click)="nextStep()">Next</button>
-</div>
+          <label>Subject Name</label>
+          <input formControlName="name" placeholder="Enter subject name">
 
-
-<!-- Step 2: Subjects -->
-<div *ngIf="currentStep === 1" class="step">
-  <h3>Enter your subjects</h3>
-  <form [formGroup]="subjectsForm">
-    <div formArrayName="subjects" *ngFor="let sub of subjects.controls; let i=index">
-      <div [formGroupName]="i" class="subject-card">
-        
-        <label for="name-{{i}}">Subject Name</label>
-        <input id="name-{{i}}" formControlName="name" placeholder="Enter subject name">
-
-        <label for="coef-{{i}}">Coefficient</label>
-        <input id="coef-{{i}}" formControlName="coefficient" type="number" placeholder="Enter coefficient">
-
+          <label>Coefficient</label>
+          <input formControlName="coefficient" type="number" placeholder="Coefficient">
+        </div>
       </div>
-    </div>
 
-    <button type="button" (click)="addSubject()">Add Another Subject</button>
-    <button type="button" (click)="nextStep()">Next</button>
-  </form>
-</div>
+      <button type="button" (click)="addSubject()">Add Another Subject</button>
+      <button type="button" (click)="nextStep()">Next</button>
+    </form>
+  </div>
 
+  <!-- Step 3: Activities -->
+  <div *ngIf="currentStep === 3" class="step">
+    <h3>Extra Activities</h3>
 
-<!-- Step 3: Activities -->
-<div *ngIf="currentStep === 2" class="step">
-  <h3>Extra Activities</h3>
+    <form [formGroup]="activitiesForm">
+      <div formArrayName="activities">
+        <div
+          *ngFor="let act of activities.controls; let i = index"
+          [formGroupName]="i"
+          class="activity-card"
+        >
+          <label>Activity Name</label>
+          <input formControlName="name" placeholder="Enter activity name">
 
-  <form [formGroup]="activitiesForm">
-    <div formArrayName="activities" *ngFor="let act of activities.controls; let i=index">
-      <div [formGroupName]="i" class="activity-card">
+          <label>Time Required Per Day (hours)</label>
+          <input formControlName="priority" type="number">
 
-        <label for="activity-name-{{i}}">Activity Name</label>
-        <input id="activity-name-{{i}}" formControlName="name" placeholder="Enter activity name">
+          <label>Start Time</label>
+          <input formControlName="startTime" type="time">
 
-        <label for="activity-priority-{{i}}">Time Required Per Day (hours)</label>
-        <input id="activity-priority-{{i}}" formControlName="priority" type="number"
-               placeholder="How much time it takes per day">
-
-        <label for="activity-start-{{i}}">Start Time</label>
-        <input id="activity-start-{{i}}" formControlName="startTime" type="time">
-
-        <label for="activity-end-{{i}}">End Time</label>
-        <input id="activity-end-{{i}}" formControlName="endTime" type="time">
-
+          <label>End Time</label>
+          <input formControlName="endTime" type="time">
+        </div>
       </div>
-    </div>
 
-    <button type="button" (click)="addActivity()">Add Another Activity</button>
-  </form>
+      <button type="button" (click)="addActivity()">Add Another Activity</button>
+    </form>
 
-  <button (click)="generateSchedule()">Generate Schedule</button>
+    <button (click)="generateSchedule()">Generate Schedule</button>
+  </div>
 </div>
