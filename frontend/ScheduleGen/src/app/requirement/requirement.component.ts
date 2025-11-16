@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ScheduleService } from '../services/schedule.service';
 
 interface Activity {
   name: string;
@@ -86,7 +87,7 @@ export class RequirementComponent {
   subjectsForm: FormGroup;
   activitiesForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private scheduleService: ScheduleService) {
     // Initialize schedule
     this.weekDays.forEach(day => {
       this.schedule[day] = { status: '' };
@@ -143,17 +144,30 @@ export class RequirementComponent {
 
   /* ------------------- FINAL RESULT ------------------- */
   generateSchedule() {
-    const userData: InputData = {
-      dailyWork: this.dailyWorkSchedule,
-      schedule: this.schedule,
-      subjects: this.subjectsForm.value.subjects,
-      activities: this.activitiesForm.value.activities
-    };
+  const userData: InputData = {
+    dailyWork: this.dailyWorkSchedule,
+    schedule: this.schedule,
+    subjects: this.subjectsForm.value.subjects,
+    activities: this.activitiesForm.value.activities
+  };
 
-    const text = parseScheduleToText(userData);
-    console.log(text);
-    console.log(userData);
+  const text = parseScheduleToText(userData);
+  console.log(text);
+  console.log(userData);
 
-    this.router.navigate(['/schedule'], { state: { data: userData } });
-  }
+  // Send data via service
+  this.scheduleService.sendSchedule(userData).subscribe({
+    next: (res) => {
+      console.log('Data sent successfully', res);
+      // Use backend studyplan if available, otherwise fallback to userData
+      const studyplan = res.studyplan ?? userData;
+      // Pass to ScheduleComponent as 'scheduleData'
+      this.router.navigate(['/schedule'], { state: { scheduleData: studyplan } });
+    },
+    error: (err) => {
+      console.error('Error sending data', err);
+    }
+  });
+}
+
 }

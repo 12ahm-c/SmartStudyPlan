@@ -1,79 +1,39 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.scss'],
-  imports: [ CommonModule, ]
+  standalone: true,
+  imports: [CommonModule]
 })
 export class ScheduleComponent implements OnInit {
-  @Input() scheduleData: any;
-
   isLoading = true;
-
   days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  formattedSchedule: { [day: string]: { [time: string]: string } } = {};
 
-  formattedSchedule: any = {
-
-      "Mon": {
-        "18:30-20:00": "cloud",
-        "21:00-23:00": "math"
-      },
-      "Tue": {
-        "10:00-12:00": "cloud",
-        "14:00-16:00": "math",
-        "16:00-18:00": "oracle",
-        "18:30-20:00": "Archi SOA",
-        "21:00-23:00": "cerf,Pyth"
-      },
-      "Wed": {
-        "18:30-20:00": "cloud",
-        "21:00-23:00": "math"
-      },
-      "Thu": {
-        "18:30-20:00": "cloud",
-        "21:00-23:00": "oracle"
-      },
-      "Fri": {
-        "18:30-20:00": "Archi SOA",
-        "21:00-23:00": "cerf,Pyth"
-      },
-      "Sat": {
-        "18:30-20:00": "J2e avance",
-        "21:00-23:00": "math"
-      },
-      "Sun": {
-        "10:00-12:00": "cloud",
-        "14:00-16:00": "math",
-        "16:00-18:00": "oracle",
-        "18:30-20:00": "Archi SOA",
-        "21:00-23:00": "J2e avance"
-      }
-    
-  }
-    ;
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.simulateLoading();
-    // this.formatSchedule();
+
+    const navState = this.router.getCurrentNavigation()?.extras.state as { scheduleData: any };
+    if (navState?.scheduleData) {
+      this.formattedSchedule = navState.scheduleData;
+    }
   }
 
   simulateLoading() {
-    // 2 second "Generating..." animation
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
-  }
-
-  formatSchedule() {
-    if (!this.scheduleData || !this.scheduleData.generatedSchedule) return;
-    this.formattedSchedule = this.scheduleData.generatedSchedule;
+    setTimeout(() => this.isLoading = false, 2000);
   }
 
   getTimes(day: string): string[] {
-    return this.formattedSchedule[day]
-      ? Object.keys(this.formattedSchedule[day])
-      : [];
+    return this.formattedSchedule[day] ? Object.keys(this.formattedSchedule[day]) : [];
+  }
+
+  getActivity(day: string, time: string): string {
+    return this.formattedSchedule[day]?.[time] || '';
   }
 }
