@@ -110,34 +110,9 @@ Response:
 
 ⸻
 
-Notes
-	•	Make sure the .env file is never committed to GitHub, as it contains sensitive API keys.
-	•	All endpoints return JSON.
-	•	The AI-generated study plan is fully customizable based on the user’s input data.
 
-⸻
 
-Contributing
-	1.	Create a new branch for your feature:
 
-git checkout -b feature/your-feature
-
-	2.	Make your changes and commit:
-
-git add .
-git commit -m "Add new feature"
-
-	3.	Push your branch:
-
-git push origin feature/your-feature
-
-	4.	Open a Pull Request for review.
-
-⸻
-
-License
-
-This project is licensed under the MIT License.
 
 يمكنك الآن نسخها كاملة إلى ملف `README.md` في مجلد **backend** ثم عمل commit و push على فرعك.  
 
