@@ -6,15 +6,17 @@ exports.generateStudyPlan = async (req, res) => {
     console.log("===== AI Request Body =====");
     console.log(req.body);
 
-    // نفترض أن frontend أرسل البيانات كلها في body.data
-    const data = req.body.data;
+    // استقبال البيانات سواء كانت مغلفة بـ data أو مباشرة
+    const data = req.body.data ?? req.body;
 
-    if (!data) {
+    if (!data || Object.keys(data).length === 0) {
       return res.status(400).json({
         status: "error",
         message: "لم يتم إرسال أي بيانات"
       });
     }
+
+    console.log("📥 Received data:", data);
 
     // بناء الـ prompt للـ AI باستخدام كل البيانات
     const prompt = buildPrompt(data);
@@ -38,19 +40,22 @@ exports.generateStudyPlan = async (req, res) => {
     let aiResult = apiResponse.data.choices[0].message.content;
 
     // تحويل رد AI إلى JSON
-    let studyPlan = null;
+    let studyplan = null;
     const jsonMatch = aiResult.match(/```json([\s\S]*?)```/);
 
     if (jsonMatch) {
-      studyPlan = JSON.parse(jsonMatch[1].trim());
+      studyplan = JSON.parse(jsonMatch[1].trim());
     } else {
-      studyPlan = JSON.parse(aiResult);
+      studyplan = JSON.parse(aiResult);
     }
 
+    console.log("📤 Sending studyplan:", studyplan);
+
+    // إرسال البيانات للـ frontend
     res.json({
       status: "success",
       message: "تم إنشاء جدول المراجعة بنجاح",
-      studyPlan
+      studyplan
     });
 
   } catch (error) {
