@@ -6,9 +6,9 @@ const handleOnboarding = (req, res) => {
     console.log('📥 Received onboarding data:', req.body);
     console.log('==============================');
 
-    const data = req.body;
+    // دعم كل من req.body.data أو req.body مباشرة
+    const data = req.body.data ?? req.body;
 
-    // التأكد من وجود البيانات
     if (!data || Object.keys(data).length === 0) {
       return res.status(400).json({
         status: 'error',
@@ -16,10 +16,8 @@ const handleOnboarding = (req, res) => {
       });
     }
 
-    // البيانات المطلوبة في النظام الجديد
     const { activities, dailyWork, schedule, subjects } = data;
 
-    // التحقق من وجود الحقول الأساسية
     if (!dailyWork || !schedule || !subjects) {
       return res.status(400).json({
         status: 'error',
@@ -27,7 +25,6 @@ const handleOnboarding = (req, res) => {
       });
     }
 
-    // تشغيل التحقق حسب قواعدك (إذا كنت تستخدم validation خاص بك)
     const validation = validateOnboarding(data);
     if (!validation.valid) {
       return res.status(400).json({
@@ -36,7 +33,6 @@ const handleOnboarding = (req, res) => {
       });
     }
 
-    // إرجاع البيانات جاهزة للـ AI
     return res.status(200).json({
       status: 'success',
       message: 'تم استلام البيانات بنجاح وهي جاهزة للمعالجة',
