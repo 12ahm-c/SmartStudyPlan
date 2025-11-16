@@ -1,0 +1,18 @@
+.schedule-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+  font-family: "Tajawal", sans-serif;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  pre {
+    background: #f0f0f0;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+  }
+}
